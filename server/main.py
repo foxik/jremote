@@ -45,7 +45,7 @@ HOST = ''  # Standard loopback interface address (localhost)
 
 
 device = None
-
+lastDeviceName = ""
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((HOST, port))
     s.listen()
@@ -68,9 +68,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                         if packet != packets[-1]:
                             parsedData = json.loads(packet)
                             if "deviceName" in parsedData:
-                                if device is None:
+                                if parsedData["deviceName"] != lastDeviceName:
+                                    print(parsedData["deviceName"])
+                                    print(lastDeviceName)
                                     device = createDevice(parsedData)
-                                time.sleep(2)
+                                    time.sleep(2)
+                                    lastDeviceName = parsedData["deviceName"]
                             if "typ" in parsedData:
                                 if parsedData["typ"] == "button":
                                     #print("button")
