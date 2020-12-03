@@ -11,7 +11,6 @@ long_options = ["port="]
 argument_list = sys.argv[1:]
 try:
     arguments, values = getopt.getopt(argument_list, short_options, long_options)
-    print(arguments)
 except getopt.error as err:
     # Output error, and return with an error code
     print (str(err))
@@ -50,10 +49,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((HOST, port))
     s.listen()
     while True:
+        print("Listening for connection...")
         conn, addr = s.accept()
         with conn:
             print('Connected by', addr)
-            print(uinput.BTN_JOYSTICK)
             buff = ""
             while True:
                 data = conn.recv(70)
@@ -69,8 +68,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                             parsedData = json.loads(packet)
                             if "deviceName" in parsedData:
                                 if parsedData["deviceName"] != lastDeviceName:
-                                    print(parsedData["deviceName"])
-                                    print(lastDeviceName)
+                                    print("Device: " + parsedData["deviceName"] + " connected")
                                     device = createDevice(parsedData)
                                     time.sleep(2)
                                     lastDeviceName = parsedData["deviceName"]
