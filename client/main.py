@@ -52,7 +52,7 @@ jsonDeviceData = json.dumps(deviceData)
         
 # Main event loop
 
-with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((host, port))
     s.sendall(str.encode(jsonDeviceData + "|"))
     

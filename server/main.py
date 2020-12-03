@@ -46,7 +46,7 @@ HOST = ''  # Standard loopback interface address (localhost)
 
 device = None
 
-with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((HOST, port))
     s.listen()
     conn, addr = s.accept()
