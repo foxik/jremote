@@ -41,7 +41,7 @@ def createDevice(deviceData):
     return uinput.Device(tuple(events))
       
 
-HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
+HOST = ''  # Standard loopback interface address (localhost)
 
 
 device = None
