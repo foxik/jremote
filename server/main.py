@@ -1,6 +1,6 @@
 import socket
 import uinput 
-import json
+import ujson as json
 import time
 import sys
 import getopt
@@ -56,7 +56,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             print(uinput.BTN_JOYSTICK)
             buff = ""
             while True:
-                data = conn.recv(256)
+                data = conn.recv(70)
                 if not data:
                     break
                 buff = buff + data.decode()

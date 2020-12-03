@@ -71,10 +71,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     intervalB = [-255, 255];
                     val = int((comand["value"]  - intervalA[0]) * (intervalB[1] - intervalB[0]) / (intervalA[1] - intervalA[0]) + intervalB[0])
                     if(lastValue != val):
+                        print(str.encode(json.dumps(comand)))
                         s.sendall(str.encode(json.dumps(comand) + "|")) 
                         lastValue = val;
-            else:
-                s.sendall(str.encode(json.dumps(comand) + "|")) 
+                else:
+                    s.sendall(str.encode(json.dumps(comand) + "|")) 
         #axis = js1.readAxis()
         #if axis is not None:
         #    print(json.dumps(axis) + "|")
