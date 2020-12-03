@@ -49,36 +49,38 @@ device = None
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((HOST, port))
     s.listen()
-    conn, addr = s.accept()
-    with conn:
-        print('Connected by', addr)
-        print(uinput.BTN_JOYSTICK)
-        buff = ""
-        while True:
-            data = conn.recv(1024)
-            if not data:
-                break
-            buff = buff + data.decode()
-           
-            packets = buff.split("|")
-            for packet in packets:
-                #process packet
-                if packet != "":
-                    if packet != packets[-1]:
-                        parsedData = json.loads(packet)
-                        if "deviceName" in parsedData:
-                            device = createDevice(parsedData)
-                            time.sleep(2)
-                        if "typ" in parsedData:
-                            if parsedData["typ"] == "button":
-                                print("button")
-                                print(parsedData["index"])
-                                button = (0x01,parsedData["cod"])
-                                device.emit(button,parsedData["value"])
-                            else:
-                                axes = (0x03,parsedData["cod"])
-                                device.emit(axes,parsedData["value"])
-                    
-                    
-            buff = packets[-1]
+    while True:
+        conn, addr = s.accept()
+        with conn:
+            print('Connected by', addr)
+            print(uinput.BTN_JOYSTICK)
+            buff = ""
+            while True:
+                data = conn.recv(256)
+                if not data:
+                    break
+                buff = buff + data.decode()
+            
+                packets = buff.split("|")
+                for packet in packets:
+                    #process packet
+                    if packet != "":
+                        if packet != packets[-1]:
+                            parsedData = json.loads(packet)
+                            if "deviceName" in parsedData:
+                                if device is None:
+                                    device = createDevice(parsedData)
+                                time.sleep(2)
+                            if "typ" in parsedData:
+                                if parsedData["typ"] == "button":
+                                    #print("button")
+                                    #print(parsedData["index"])
+                                    button = (0x01,parsedData["cod"])
+                                    device.emit(button,parsedData["value"])
+                                else:
+                                    axes = (0x03,parsedData["cod"])
+                                    device.emit(axes,parsedData["value"])
+                        
+                        
+                buff = packets[-1]
             
