@@ -119,7 +119,6 @@ class Joystick:
     num_buttons = 0
 
     def openDevice(self):
-        print('Opening %s...' % self.filepath)
         jsdev = open(self.filepath, 'rb')
         self.jsdev = jsdev 
         self.num_axes = self.getNumberAxes()
@@ -132,7 +131,6 @@ class Joystick:
         buf = array.array('B', [0] * 64)
         ioctl(self.jsdev, 0x80006a13 + (0x10000 * len(buf)), buf) # JSIOCGNAME(len)
         js_name = buf.tobytes().rstrip(b'\x00').decode('utf-8')
-        print('Device name: %s' % js_name)
         return js_name
 
     # Get number of axes and buttons.
@@ -202,7 +200,6 @@ class Joystick:
                     for key, val in self.button_names.items():
                         if val == button:
                             cod = key 
-                    print("boton value " + str(value))
                     return command(number,button, value,cod,"button")
             elif type & 0x02:
                 axis = self.axis_map[number]

@@ -53,7 +53,10 @@ jsonDeviceData = json.dumps(deviceData)
 lastValue = 0
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    print("Connecting to server...")
     s.connect((host, port))
+    print("Connected")
+    print("Sending device data: ")
     s.sendall(str.encode(jsonDeviceData + "|"))
     
     print(jsonDeviceData)
