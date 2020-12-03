@@ -1,11 +1,33 @@
 from joystick import Joystick
 import socket
 import json
+import getopt
+import sys
 
-HOST = '127.0.0.1'  # The server's hostname or IP address
-PORT = 6666        # The port used by the server
+short_options = "a:p:d:"
+long_options = ["ip=","port=","device="]
+argument_list = sys.argv[1:]
+try:
+    arguments, values = getopt.getopt(argument_list, short_options, long_options)
+    print(arguments)
+except getopt.error as err:
+    # Output error, and return with an error code
+    print (str(err))
+    sys.exit(2)
+    
+host = '127.0.0.1' 
+port = 6666   
+device = "/dev/input/js0"
 
-js1 = Joystick("/dev/input/js2")
+for current_argument, current_value in arguments:
+    if current_argument in ("-a", "--ip"):
+        host =  current_value
+    elif current_argument in ("-p", "--port"):
+        port = int(current_value)
+    elif current_argument in ("-d", "--device"):
+        device = current_value
+
+js1 = Joystick(device)
 js1.openDevice();
 deviceName = js1.getDeviceName()
 num_axes = js1.getNumberAxes()
@@ -31,7 +53,7 @@ jsonDeviceData = json.dumps(deviceData)
 # Main event loop
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.connect((HOST, PORT))
+    s.connect((host, port))
     s.sendall(str.encode(jsonDeviceData + "|"))
     
     print(jsonDeviceData)
