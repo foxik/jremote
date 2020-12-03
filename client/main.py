@@ -62,7 +62,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     while True:
         comand = js1.readDevice()
         if comand is not None:
-            print(str.encode(json.dumps(comand) + "|"))
+            #print(str.encode(json.dumps(comand) + "|"))
+            
+            if "typ" in comand:
+                if comand["typ"] == "axis":
+                    
+            val = (comand["value"] -(-32767.0))*(255-(-255))/(32767.0-(-32767.0)) + (-255)
+            print(val)
+            
             s.sendall(str.encode(json.dumps(comand) + "|")) 
         #axis = js1.readAxis()
         #if axis is not None:
