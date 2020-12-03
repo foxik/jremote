@@ -61,7 +61,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     
     print(jsonDeviceData)
     
-    
+    print("You can use your controller now")
     while True:
         comand = js1.readDevice()
         if comand is not None:
