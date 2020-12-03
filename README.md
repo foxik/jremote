@@ -16,3 +16,8 @@ It listens for an incomming connection and creates a virtual joystick with the s
 Then it can receive inputs from the client and will act as a pysically connected joystick/gamepad.
 
 python server/main.py -p [port to listen for connection]
+
+Dependencies:
+-Python 3
+-uinput kernel module loaded
+-python-uinput
