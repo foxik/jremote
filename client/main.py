@@ -3,7 +3,6 @@ import socket
 import json
 import getopt
 import sys
-import time
 
 short_options = "a:p:d:"
 long_options = ["ip=","port=","device="]
@@ -52,6 +51,7 @@ jsonDeviceData = json.dumps(deviceData)
 
         
 # Main event loop
+lastValue = 0
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((host, port))
@@ -65,15 +65,16 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if comand is not None:
             #print(str.encode(json.dumps(comand) + "|"))
             
-            #if "typ" in comand:
-            #    if comand["typ"] == "axis":     
-            #        intervalA = [-32767.0, 32767.0];
-            #        intervalB = [-255, 255];
-            #        val = (comand["value"]  - intervalA[0]) * (intervalB[1] - intervalB[0]) / (intervalA[1] - intervalA[0]) + intervalB[0]
-            #        print(val)
-            
-            s.sendall(str.encode(json.dumps(comand) + "|")) 
-            time.sleep(0.1)
+            if "typ" in comand:
+                if comand["typ"] == "axis":     
+                    intervalA = [-32767.0, 32767.0];
+                    intervalB = [-255, 255];
+                    val = int((comand["value"]  - intervalA[0]) * (intervalB[1] - intervalB[0]) / (intervalA[1] - intervalA[0]) + intervalB[0])
+                    if(lastValue != val):
+                        s.sendall(str.encode(json.dumps(comand) + "|")) 
+                        lastValue = val;
+            else:
+                s.sendall(str.encode(json.dumps(comand) + "|")) 
         #axis = js1.readAxis()
         #if axis is not None:
         #    print(json.dumps(axis) + "|")
