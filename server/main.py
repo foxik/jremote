@@ -2,6 +2,26 @@ import socket
 import uinput 
 import json
 import time
+import sys
+import getopt
+
+
+short_options = "p:"
+long_options = ["port="]
+argument_list = sys.argv[1:]
+try:
+    arguments, values = getopt.getopt(argument_list, short_options, long_options)
+    print(arguments)
+except getopt.error as err:
+    # Output error, and return with an error code
+    print (str(err))
+    sys.exit(2)
+
+port = 6666       # Port to listen on (non-privileged ports are > 1023)
+
+for current_argument, current_value in arguments:
+    if current_argument in ("-p", "--port"):
+        port = int(current_value)
 
 def createDevice(deviceData):
     buttons = deviceData["button_mapHex"]
@@ -22,12 +42,12 @@ def createDevice(deviceData):
       
 
 HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
-PORT = 6666       # Port to listen on (non-privileged ports are > 1023)
+
 
 device = None
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.bind((HOST, PORT))
+    s.bind((HOST, port))
     s.listen()
     conn, addr = s.accept()
     with conn:
