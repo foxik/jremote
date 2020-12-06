@@ -55,7 +55,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             print('Connected by', addr)
             buff = ""
             while True:
-                data = conn.recv(70)
+                data = conn.recv(12)
                 if not data:
                     break
                 buff = buff + data.decode()
